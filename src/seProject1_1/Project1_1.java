@@ -11,28 +11,38 @@ import java.util.Vector;
 
 
 
-public class Project1_1 {
-	public static void main(String[] args) {
-		createDirectedGraph("data.txt").cons_degug();
-	}
 
+public class Project1_1 {
+	
+	public static void main(String[] args) {
+		Graph g1=createDirectedGraph("data.txt");
+		g1.cons_debug()	;
+		System.out.println(queryBridgeWords(g1,"new","and"));
+		showDirectedGraph(g1);
+	}
+	
+//合并字符数组a,b
 	static String[] concat(String[] a, String[] b) {
 		String[] c = new String[a.length + b.length];
 		System.arraycopy(a, 0, c, 0, a.length);
 		System.arraycopy(b, 0, c, a.length, b.length);
 		return c;
 	}
-
+	
+//创建邻接表
 	public static Graph createDirectedGraph(String filename) {
+		//wordtmp保存并分割一行，words保存全部单词
 		String[] wordtmp = null, words = {};
 		try {
 			FileReader fr = new FileReader(filename);
 			BufferedReader br = new BufferedReader(fr);
 			String line = null;
 			while ((line = br.readLine()) != null) {
-				wordtmp = line.split("[^a-z^A-Z]{1,}");
-				for (int i = 0; i < wordtmp.length; i++) {
-					wordtmp[i] = wordtmp[i].toLowerCase();
+				//line=line.toLowerCase();
+				//分割方式：以一个或多个全部非小写字母字符为分割点
+				wordtmp = line.split("[^a-zA-Z]+");
+				for(int i=0;i<wordtmp.length;i++) {
+					wordtmp[i]=wordtmp[i].toLowerCase();	
 				}
 				words = concat(words, wordtmp);
 			}br.close();
@@ -44,17 +54,18 @@ public class Project1_1 {
 		Graph graph = new Graph(words);
 		return graph;
 	}
-	String queryBridgeWords(Graph G, String word1, String word2) {
+	//输出G中word1和word2的桥接词
+	static String queryBridgeWords(Graph G, String word1, String word2) {
 		int word1_num=G.get_word_place(word1);
 		int word2_num=G.get_word_place(word2);
-		if(word1_num<0 || word2_num<0) {
-			return "No word1 or word2 in the graph!";
-		}
+		if(word1_num<0 || word2_num<0) 
+			return "No "+word1+" or "+word2+" in the graph!";
 		G_List lists[] = G.get_lists();
 		G_List tmp1=lists[word1_num];
+		//System.out.println(word2_num);
 		int bridge[]= {};
 		while(tmp1!=null) {
-			G_List tmp2=lists[word1_num];
+			G_List tmp2=lists[tmp1.word_place];
 			while(tmp2!=null) {
 				if(tmp2.word_place==word2_num) {
 					bridge=Arrays.copyOf(bridge, bridge.length+1);
@@ -64,19 +75,40 @@ public class Project1_1 {
 				tmp2=tmp2.next;
 			}
 			tmp1=tmp1.next;
+
 		}
 		if(bridge.length==0)
-			return "No bridge words from word1 to word2!";
-		String result="The bridge words from word1 to word2 are: ";
+			return "No bridge words from "+word1+" to "+word2+"!";
+		if(bridge.length==1)
+			return "The bridge words from "+word1+" to "+word2+" is: "+G.get_vector()[bridge[0]];
+		String result="The bridge words from "+word1+" to "+word2+" are: ";
 		for(int i=0;i<bridge.length-1;i++) {
 			result=result+G.get_word(bridge[i])+", ";
 		}
 		result = result+"and "+G.get_word(bridge[bridge.length-1])+".";
 		return result;
 	}
-
+	static void showDirectedGraph(Graph G) {
+		GraphViz gViz = new GraphViz("E:\\Projects\\java\\SEProject_1", "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe");
+		gViz.start_graph();
+		for(G_List list:G.get_lists()) {
+			if(list.next!=null) {
+				G_List tmp=list.next;
+				while(tmp!=null) {
+					gViz.addln(G.get_vector()[list.word_place]+"->"+G.get_vector()[tmp.word_place]+";");
+					tmp=tmp.next;
+				}
+			}
+		}
+		gViz.end_graph();
+		try {
+			gViz.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
-
+//图节点
 class G_List {
 	public int word_place;
 	public G_List next;
@@ -91,11 +123,12 @@ class G_List {
 	public G_List() {
 	}
 }
-
+//图
 class Graph {
 	private String vector[] = {};
 	private int v_number, n_number;
 	private G_List lists[] = {};
+	//存储word-》word_place
 	private Map<String, Integer> letters = new HashMap<String, Integer>();
 	public Graph(String words[]) {
 		int pre = -1;
@@ -110,7 +143,6 @@ class Graph {
 
 				letters.put(word, vector.length - 1);
 				if (pre >= 0) {
-
 					tmp.cost = 1;
 					tmp.next = null;
 					tmp.word_place = vector.length - 1;
@@ -145,7 +177,7 @@ class Graph {
 		v_number = vector.length;
 	}
 
-	public String cons_degug() {
+	public String cons_debug() {
 		for(String v:vector) {
 			System.out.print(v + " ");
 		}
