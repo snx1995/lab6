@@ -151,7 +151,7 @@ public class Project1_1 {
 		return newText;
 	}
 
-	static String randomWalk(Graph G) {
+	public static String randomWalk(Graph G) {
 		int n = G.get_v_number();
 		int edge_tmp=0;
 		boolean[][] edgeVisited = new boolean[n][n];
@@ -188,6 +188,7 @@ public class Project1_1 {
 		//to explore strange new worlds seek out life and civilizations this 
 		return walkPath;
 	}
+	
 	static String calcShortestPath(Graph G, String word1, String word2) {
 		if(G.get_word_place(word1)==-1||G.get_word_place(word2)==-1)
 			return "word1 or word2 not in graph";

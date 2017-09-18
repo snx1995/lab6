@@ -180,17 +180,24 @@ class ButtonPanel extends JPanel {
 	private JButton bt2;
 	private JButton bt3;
 	private JButton bt4;
+	private JButton bt5;
 	private ResultPanel result;
 	private ShowImageComponent showImg;
 	private boolean pause;
 
+	private int flag = -1;
+
 	private StringMessage message;
 
+	private String[] randomPath;
+	
 	public ButtonPanel(ResultPanel r, ShowImageComponent s, Graph G) {
+		bt5 = new JButton("停止游走");
 		bt4 = new JButton("随机游走");
 		bt3 = new JButton("最短路径");
 		bt2 = new JButton("生成新文本");
 		bt1 = new JButton("桥接词");
+		bt5.setVisible(false);
 		result = r;
 		showImg = s;
 		message = new StringMessage();
@@ -199,7 +206,31 @@ class ButtonPanel extends JPanel {
 		bt1.addActionListener(event -> bridgeWordsFrame(G));
 		bt2.addActionListener(event -> newTextFrame(G));
 		bt3.addActionListener(event -> shortestWayFrame(G));
+		bt4.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				flag++;
+				
+				if(flag==0) {
+					randomPath = Project1_1.randomWalk(G).split("[^a-z]+");
+					result.setResult(randomPath[0]);
+				}
+				else {
+					String path = randomPath[0];
+					for(int i=1;i<=flag;i++) {
+						path += " " +randomPath[i];
+					}
+					result.setResult(path);
+				}
+				if(flag>=randomPath.length-1) {
+					bt4.setText("随机游走");
+					flag=-1;
+				}
+				else bt4.setText("继续游走");
+			}
+		});
+		add(bt5, 8, 0);
 		add(bt4, 6, 0);
 		add(bt3, 4, 0);
 		add(bt2, 2, 0);
@@ -342,7 +373,7 @@ class ButtonPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					message.msg2 = t1.getText().toLowerCase();
 					message.msg1 = t2.getText().toLowerCase();
-					result.setResult(Project1_1.calcShortestPath(G,message.msg1,message.msg2));
+					result.setResult(Project1_1.calcShortestPath(G, message.msg1, message.msg2));
 					showImg.setImgFilePath("E:\\Projects\\java\\SEProject_1\\shortestPath\\dotGif.gif");
 					jFrame.dispose();
 				}
@@ -358,8 +389,10 @@ class ButtonPanel extends JPanel {
 			jFrame.setVisible(true);
 		});
 	}
-	
 
+	public void randomWalkFrame(String[] randomPath, int i) {
+
+	}
 }
 
 class ResultPanel extends JPanel {
@@ -404,16 +437,16 @@ class ShowImageComponent extends JComponent {
 		setLayout(new BorderLayout());
 		picLabel = new JLabel("");
 		picLabel.setIcon(pic);
-		//add(picLabel,BorderLayout.CENTER);
-//		try {
-//			picLabel.setIcon(new ImageIcon(ImageIO.read(imgfile)));
-//		} catch (IOException e) {
-//			// TODO 自动生成的 catch 块
-//			e.printStackTrace();
-//		}
+		// add(picLabel,BorderLayout.CENTER);
+		// try {
+		// picLabel.setIcon(new ImageIcon(ImageIO.read(imgfile)));
+		// } catch (IOException e) {
+		// // TODO 自动生成的 catch 块
+		// e.printStackTrace();
+		// }
 		repaint();
 	}
-	
+
 	public void paintComponent(Graphics G) {
 		super.paintComponents(G);
 		System.out.println("Show Image");
