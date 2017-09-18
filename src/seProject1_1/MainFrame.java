@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.chrono.JapaneseChronology;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageInputStream;
@@ -112,7 +113,15 @@ public class MainFrame {
 
 					// if(filePath.matches(""))
 					Graph graph = Project1_1.createDirectedGraph(filePath);
-					// Project1_1.showDirectedGraph(graph);
+					Project1_1.showDirectedGraph(graph);
+					
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					}
+					
 					new MainFrame(graph);
 					jf.dispose();
 				}
@@ -137,7 +146,6 @@ public class MainFrame {
 
 	public MainFrame(Graph G) {
 		EventQueue.invokeLater(() -> {
-			System.out.println("!!!");
 			JFrame frame = new JFrame();
 			frame.setTitle("实验1");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -147,9 +155,7 @@ public class MainFrame {
 			frame.setIconImage(image);
 
 			frame.setLayout(new BorderLayout());
-			System.out.println("!!!");
 			ShowImageComponent sic = new ShowImageComponent(G);
-			System.out.println("!!!");
 			Border imgBorder = BorderFactory.createEtchedBorder();
 			Border imgTitledBorder = BorderFactory.createTitledBorder(imgBorder, "Directed Graph");
 			sic.setBorder(imgTitledBorder);
@@ -167,9 +173,8 @@ public class MainFrame {
 			frame.add(result, BorderLayout.SOUTH);
 			frame.add(sic, BorderLayout.CENTER);
 			frame.add(buttonsPart, BorderLayout.EAST);
-			System.out.println("!!!");
 			frame.setVisible(true);
-			System.out.println("!!!");
+			sic.repaint();
 		});
 	}
 
@@ -211,7 +216,6 @@ class ButtonPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				flag++;
-				
 				if(flag==0) {
 					randomPath = Project1_1.randomWalk(G).split("[^a-z]+");
 					result.setResult(randomPath[0]);
@@ -375,6 +379,7 @@ class ButtonPanel extends JPanel {
 					message.msg1 = t2.getText().toLowerCase();
 					result.setResult(Project1_1.calcShortestPath(G, message.msg1, message.msg2));
 					showImg.setImgFilePath("E:\\Projects\\java\\SEProject_1\\shortestPath\\dotGif.gif");
+					showImg.repaint();
 					jFrame.dispose();
 				}
 			});
@@ -414,6 +419,7 @@ class ResultPanel extends JPanel {
 		resultText.setText(result);
 		this.result = result;
 	}
+	
 }
 
 class ShowImageComponent extends JComponent {
@@ -429,7 +435,7 @@ class ShowImageComponent extends JComponent {
 	private JLabel picLabel;
 
 	public ShowImageComponent(Graph G) {
-		Project1_1.showDirectedGraph(G);
+		//Project1_1.showDirectedGraph(G);
 		image = getToolkit().getImage("E:\\Projects\\java\\SEProject_1\\dotGif.gif");
 		imageFilePath = "E:\\Projects\\java\\SEProject_1\\dotGif.gif";
 		Icon pic = new ImageIcon("E:\\Projects\\java\\SEProject_1\\dotGif.gif");
@@ -446,11 +452,14 @@ class ShowImageComponent extends JComponent {
 		// }
 		repaint();
 	}
-
+	public void repaintImg() {
+		image = new ImageIcon(imageFilePath).getImage();
+		repaint();
+	}
+	
 	public void paintComponent(Graphics G) {
 		super.paintComponents(G);
 		System.out.println("Show Image");
-		image = new ImageIcon(imageFilePath).getImage();
 		// Image img = getToolkit().getImage(imageFilePath);
 		// Image img = new ImageIcon(imageFilePath).getImage();
 		// Image img2 = getToolkit().getImage(imageFilePath);
@@ -465,10 +474,17 @@ class ShowImageComponent extends JComponent {
 	}
 
 	public void setImgFilePath(String filepath) {
+		image.flush();
 		imageFilePath = filepath;
+		image = new ImageIcon(imageFilePath).getImage();
 		repaint();
 	}
-
+	
+	public void paint(Graphics G) {
+		image = new ImageIcon(imageFilePath).getImage();
+		G.drawImage(image, 30, 30, DEFAULT_WIDTH - 10, DEFAULT_HEIGHT - 10, null);
+	}
+	
 	public Dimension getPreferredSize() {
 		return new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}

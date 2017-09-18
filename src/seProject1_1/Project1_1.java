@@ -129,6 +129,12 @@ public class Project1_1 {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
 	}
 	
 	static String generateNewText(Graph G, String inputText) {
