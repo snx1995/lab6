@@ -22,11 +22,13 @@ public class Project1_1 {
 			System.out.println(word);
 		}
 		System.out.println(generateNewText(g1, "new and"));
-		// showDirectedGraph(g1);
+		showDirectedGraph(g1);
 		for(int i=0;i<g1.get_v_number();i++) {
 			System.out.println(g1.getEdgeNum(i));
 		}
 		System.out.println(randomWalk(g1));
+		 System.out.println(calcShortestPath(g1,"to","hello"));
+		 System.out.println(1);
 	}
 
 	// 合并字符数组a,b
@@ -87,9 +89,10 @@ public class Project1_1 {
 		gViz.start_graph();
 		for (G_List list : G.get_lists()) {
 			if (list.next != null) {
-				G_List tmp = list.next;
+				G_List tmp = list;
 				while (tmp != null) {
-					gViz.addln(G.get_vector()[list.word_place] + "->" + G.get_vector()[tmp.word_place] + ";");
+					if(tmp.cost!=0) 
+					gViz.addln(G.get_vector()[list.word_place] + "->" + G.get_vector()[tmp.word_place] +"[label=\""+tmp.cost+"\"]"+ ";");
 					tmp = tmp.next;
 				}
 			}
@@ -102,6 +105,32 @@ public class Project1_1 {
 		}
 	}
 
+	static void showDirectedGraph(Graph G,Map<String,String>map) {
+		GraphViz gViz = new GraphViz("E:\\Projects\\java\\SEProject_1\\shortestPath",
+				"C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe");
+		gViz.start_graph();
+		for (G_List list : G.get_lists()) {
+			if (list.next != null) {
+				G_List tmp = list;
+				while (tmp != null) {
+					if(tmp.cost!=0) {
+						if(map.containsKey(G.get_vector()[list.word_place])&&map.get(G.get_vector()[list.word_place]).equals(G.get_vector()[tmp.word_place]))
+							gViz.addln(G.get_vector()[list.word_place] + "->" + G.get_vector()[tmp.word_place] +"[color= red label=\""+tmp.cost+"\"]"+ ";");
+						else
+							gViz.addln(G.get_vector()[list.word_place] + "->" + G.get_vector()[tmp.word_place] +"[label=\""+tmp.cost+"\"]"+ ";");
+					}
+					tmp = tmp.next;
+				}
+			}
+		}
+		gViz.end_graph();
+		try {
+			gViz.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	static String generateNewText(Graph G, String inputText) {
 		Random random = new Random();
 		String[] letters = inputText.split("[^a-zA-Z]+");
@@ -124,6 +153,7 @@ public class Project1_1 {
 
 	static String randomWalk(Graph G) {
 		int n = G.get_v_number();
+		int edge_tmp=0;
 		boolean[][] edgeVisited = new boolean[n][n];
 		
 		Random random = new Random();
@@ -131,25 +161,103 @@ public class Project1_1 {
 		G_List lists[] = G.get_lists();
 		String walkPath = G.get_word(firstWord) + " ";
 		G_List tmp=lists[firstWord];
-		int edge = random.nextInt(G.getEdgeNum(firstWord));
-		for(int i=0;i<edge;i++) {
+		int edge_bound = G.getEdgeNum(firstWord);
+		if(edge_bound==0) return G.get_word(firstWord);
+		int edge = random.nextInt(edge_bound);
+		//System.out.println(edge);
+		for(int i=0;i<=edge;i++) {
 			tmp=tmp.next;
 		}
 		int nextWord = tmp.word_place;
+		//System.out.println("nextword:"+nextWord);
 		while(!edgeVisited[firstWord][nextWord]) {
 			edgeVisited[firstWord][nextWord]=true;
-			System.out.println(firstWord + "-" + nextWord);
-			tmp=lists[firstWord];
 			walkPath = walkPath + G.get_word(nextWord)+" ";
+			System.out.println(firstWord + "-" + nextWord);
 			firstWord=nextWord;
-			edge = random.nextInt(G.getEdgeNum(firstWord));
-			for(int i=0;i<edge;i++) {
+			tmp=lists[firstWord];
+			edge_tmp=G.getEdgeNum(firstWord);
+			if(edge_tmp==0) break;
+			edge = random.nextInt(edge_tmp);
+			for(int i=0;i<=edge;i++) {
 				tmp=tmp.next;
 			}
 			nextWord = tmp.word_place;
 		}
+		if(edge_tmp!=0) walkPath+=G.get_word(tmp.word_place);
 		//to explore strange new worlds seek out life and civilizations this 
 		return walkPath;
+	}
+	static String calcShortestPath(Graph G, String word1, String word2) {
+		if(G.get_word_place(word1)==-1||G.get_word_place(word2)==-1)
+			return "word1 or word2 not in graph";
+		String minPath="";
+		int MaxNum=G.get_v_number();
+		boolean known[]= new boolean[MaxNum];
+		int length[]=new int[MaxNum];
+		int words_place[]= new int[MaxNum];
+		int word_place=G.get_word_place(word1);
+		known[word_place]=true;
+		int vect_num=1;
+		System.out.println(MaxNum);
+		for(int i=0;i<MaxNum;i++) {
+			length[i]=9999;
+		}
+		length[word_place]=0;
+		while(vect_num<MaxNum) {
+			G_List tmp1=G.get_lists()[word_place];
+			G_List tmp2=tmp1.next;
+			System.out.println(vect_num);
+			while(tmp2!=null) {
+				if(length[tmp2.word_place]>length[tmp1.word_place]+tmp2.cost) {
+					length[tmp2.word_place]=length[tmp1.word_place]+tmp2.cost;
+					words_place[tmp2.word_place]=tmp1.word_place;
+				}
+				tmp2=tmp2.next;
+			}
+			word_place = findMin(length,known,MaxNum);
+			if(word_place==-1)break;
+			known[word_place]=true;
+			vect_num++;
+		}
+		for(int i=0;i<MaxNum;i++) {
+			System.out.println(i+":"+known[i]+" "+length[i]+" "+G.get_word(words_place[i]));
+		}
+		int word2_place=G.get_word_place(word2);
+		System.out.println(word2_place);
+		if(length[word2_place]==9999) {
+			minPath="两单词不可达";
+			return minPath;
+		}
+		else {
+			int tmp=words_place[word2_place];
+			minPath="->"+word2;
+			while(length[tmp]!=0) {
+				minPath="->"+G.get_word(tmp)+minPath;
+				tmp=words_place[tmp];
+			}
+			minPath=word1+minPath;
+		}
+		Map<String,String>map=new HashMap<String,String>();
+		int tmp=word2_place;
+		while(length[tmp]!=0) {
+			map.put(G.get_word(words_place[tmp]),G.get_word(tmp));
+			tmp=words_place[tmp];
+		}
+		showDirectedGraph(G,map);
+		return minPath;
+		//to explore strange new worlds seek out life and civilizations this hello 
+	}
+	static int findMin(int[]length,boolean[]known,int MaxNum) {
+		int min_place=-1;
+		int min=999;
+		for(int i=0;i<MaxNum;i++) {
+			if(known[i]==false&&length[i]<min) {
+				min_place=i;
+				min=length[i];
+			}
+		}
+		return min_place;
 	}
 }
 

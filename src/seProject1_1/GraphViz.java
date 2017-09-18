@@ -46,6 +46,7 @@ class GraphViz {
 			}
 			FileOutputStream fos = new FileOutputStream(file);
 			fos.write(dotcode.getBytes());
+			//fos.flush();
 			fos.close();
 		} catch (java.io.IOException ioe) {
 			ioe.printStackTrace();
