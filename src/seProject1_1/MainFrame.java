@@ -108,7 +108,7 @@ public class MainFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 
-					System.out.println(jtf.getText());
+					//System.out.println(jtf.getText());
 					String filePath = jtf.getText();
 
 					// if(filePath.matches(""))
@@ -377,9 +377,10 @@ class ButtonPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					message.msg2 = t1.getText().toLowerCase();
 					message.msg1 = t2.getText().toLowerCase();
-					result.setResult(Project1_1.calcShortestPath(G, message.msg1, message.msg2));
-					showImg.setImgFilePath("E:\\Projects\\java\\SEProject_1\\shortestPath\\dotGif.gif");
-					showImg.repaint();
+					String r = Project1_1.calcShortestPath(G, message.msg1, message.msg2);
+					result.setResult(r);
+					if(!r.equals("word1 or word2 not in graph")) showImg.setImgFilePath("E:\\Projects\\java\\SEProject_1\\shortestPath\\dotGif.gif");
+					//showImg.repaint();
 					jFrame.dispose();
 				}
 			});
@@ -407,6 +408,7 @@ class ResultPanel extends JPanel {
 
 	public ResultPanel() {
 		resultText = new JTextArea("Everything ready!" + '\n' + "Please choose an option.", 4, 57);
+		resultText.setLineWrap(true);
 		Font textFont = new Font("Microsoft YaHei", 1, 16);
 		resultText.setFont(textFont);
 		resultText.setEditable(false);
