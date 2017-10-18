@@ -84,8 +84,8 @@ public class Project1_1 {
 	}
 
 	static void showDirectedGraph(Graph G) {
-		GraphViz gViz = new GraphViz("E:\\Projects\\java\\SEProject_1",
-				"C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe");
+		GraphViz gViz = new GraphViz("C:\\Users\\majunhua123\\Lab4\\Lab4",
+				"C:\\graphviz\\release\\bin\\dot.exe");
 		gViz.start_graph();
 		for (G_List list : G.get_lists()) {
 			if (list.next != null) {

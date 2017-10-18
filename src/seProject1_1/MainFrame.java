@@ -379,7 +379,7 @@ class ButtonPanel extends JPanel {
 					message.msg1 = t2.getText().toLowerCase();
 					String r = Project1_1.calcShortestPath(G, message.msg1, message.msg2);
 					result.setResult(r);
-					if(!r.equals("word1 or word2 not in graph")) showImg.setImgFilePath("E:\\Projects\\java\\SEProject_1\\shortestPath\\dotGif.gif");
+					if(!r.equals("word1 or word2 not in graph")) showImg.setImgFilePath("dotGif.gif");
 					//showImg.repaint();
 					jFrame.dispose();
 				}
@@ -438,10 +438,10 @@ class ShowImageComponent extends JComponent {
 
 	public ShowImageComponent(Graph G) {
 		//Project1_1.showDirectedGraph(G);
-		image = getToolkit().getImage("E:\\Projects\\java\\SEProject_1\\dotGif.gif");
-		imageFilePath = "E:\\Projects\\java\\SEProject_1\\dotGif.gif";
-		Icon pic = new ImageIcon("E:\\Projects\\java\\SEProject_1\\dotGif.gif");
-		File imgfile = new File("E:\\Projects\\java\\SEProject_1\\dotGif.gif");
+		image = getToolkit().getImage("dotGif.gif");
+		imageFilePath = "dotGif.gif";
+		Icon pic = new ImageIcon("dotGif.gif");
+		File imgfile = new File("dotGif.gif");
 		setLayout(new BorderLayout());
 		picLabel = new JLabel("");
 		picLabel.setIcon(pic);
