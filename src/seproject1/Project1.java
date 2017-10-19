@@ -1,4 +1,4 @@
-package seProject1_1;
+package seproject1;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -9,26 +9,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
+import java.util.Scanner;
 
-public class Project1_1 {
+public class Project1 {
 
 	public static void main(String[] args) {
 		String word1 = "to";
 		String word2 = "to";
 		Graph g1 = createDirectedGraph("data.txt");
-		g1.cons_debug();
+		g1.debugCons();
 		System.out.println(queryBridgeWords(g1, word1, word2));
 		for (String word : g1.getBridgeWords(word1, word2)) {
 			System.out.println(word);
 		}
 		System.out.println(generateNewText(g1, "new and"));
 		showDirectedGraph(g1);
-		for(int i=0;i<g1.get_v_number();i++) {
+		for(int i=0;i<g1.getNumberV();i++) {
 			System.out.println(g1.getEdgeNum(i));
 		}
 		System.out.println(randomWalk(g1));
 		 System.out.println(calcShortestPath(g1,"to","to"));
+		 
 		 System.out.println(1);
+		 g1=null;
+		 
+		 
 	}
 
 	// 合并字符数组a,b
@@ -67,8 +72,8 @@ public class Project1_1 {
 	}
 
 	// 输出G中word1和word2的桥接词
-	static String queryBridgeWords(Graph G, String word1, String word2) {
-		String[] bridge = G.getBridgeWords(word1, word2);
+	static String queryBridgeWords(Graph graphG, String word1, String word2) {
+		String[] bridge = graphG.getBridgeWords(word1, word2);
 		if (bridge == null)
 			return "No " + word1 + " or " + word2 + " in the graph!";
 		if (bridge.length == 0)
@@ -83,21 +88,21 @@ public class Project1_1 {
 		return result;
 	}
 
-	static void showDirectedGraph(Graph G) {
+	static void showDirectedGraph(Graph graphG) {
 		GraphViz gViz = new GraphViz("C:\\Users\\majunhua123\\Lab4\\Lab4",
 				"C:\\graphviz\\release\\bin\\dot.exe");
-		gViz.start_graph();
-		for (G_List list : G.get_lists()) {
+		gViz.startofGraph();
+		for (G_List list : graphG.getLists()) {
 			if (list.next != null) {
 				G_List tmp = list;
 				while (tmp != null) {
 					if(tmp.cost!=0) 
-					gViz.addln(G.get_vector()[list.word_place] + "->" + G.get_vector()[tmp.word_place] +"[label=\""+tmp.cost+"\"]"+ ";");
+					gViz.addln(graphG.getVector()[list.wordPlace] + "->" + graphG.getVector()[tmp.wordPlace] +"[label=\""+tmp.cost+"\"]"+ ";");
 					tmp = tmp.next;
 				}
 			}
 		}
-		gViz.end_graph();
+		gViz.endofGraph();
 		try {
 			gViz.run();
 		} catch (Exception e) {
@@ -105,25 +110,25 @@ public class Project1_1 {
 		}
 	}
 
-	static void showDirectedGraph(Graph G,Map<String,String>map) {
+	static void showDirectedGraph(Graph graphG,Map<String,String>map) {
 		GraphViz gViz = new GraphViz("E:\\Projects\\java\\SEProject_1\\shortestPath",
 				"C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe");
-		gViz.start_graph();
-		for (G_List list : G.get_lists()) {
+		gViz.startofGraph();
+		for (G_List list : graphG.getLists()) {
 			if (list.next != null) {
 				G_List tmp = list;
 				while (tmp != null) {
 					if(tmp.cost!=0) {
-						if(map.containsKey(G.get_vector()[list.word_place])&&map.get(G.get_vector()[list.word_place]).equals(G.get_vector()[tmp.word_place]))
-							gViz.addln(G.get_vector()[list.word_place] + "->" + G.get_vector()[tmp.word_place] +"[color= red label=\""+tmp.cost+"\"]"+ ";");
+						if(map.containsKey(graphG.getVector()[list.wordPlace])&&map.get(graphG.getVector()[list.wordPlace]).equals(graphG.getVector()[tmp.wordPlace]))
+							gViz.addln(graphG.getVector()[list.wordPlace] + "->" + graphG.getVector()[tmp.wordPlace] +"[color= red label=\""+tmp.cost+"\"]"+ ";");
 						else
-							gViz.addln(G.get_vector()[list.word_place] + "->" + G.get_vector()[tmp.word_place] +"[label=\""+tmp.cost+"\"]"+ ";");
+							gViz.addln(graphG.getVector()[list.wordPlace] + "->" + graphG.getVector()[tmp.wordPlace] +"[label=\""+tmp.cost+"\"]"+ ";");
 					}
 					tmp = tmp.next;
 				}
 			}
 		}
-		gViz.end_graph();
+		gViz.endofGraph();
 		try {
 			gViz.run();
 		} catch (Exception e) {
@@ -137,7 +142,7 @@ public class Project1_1 {
 		}
 	}
 	
-	static String generateNewText(Graph G, String inputText) {
+	static String generateNewText(Graph graphG, String inputText) {
 		Random random = new Random();
 		String[] letters = inputText.split("[^a-zA-Z]+");
 		String[] bridgeWords = null;
@@ -145,7 +150,7 @@ public class Project1_1 {
 			letters[i] = letters[i].toLowerCase();
 		String newText = letters[0];
 		for (int i = 1; i < letters.length; i++) {
-			bridgeWords = G.getBridgeWords(letters[i - 1], letters[i]);
+			bridgeWords = graphG.getBridgeWords(letters[i - 1], letters[i]);
 			if (bridgeWords == null || bridgeWords.length == 0) {
 				newText = newText + " " + letters[i];
 			} else if (bridgeWords.length == 1) {
@@ -157,111 +162,111 @@ public class Project1_1 {
 		return newText;
 	}
 
-	public static String randomWalk(Graph G) {
-		int n = G.get_v_number();
-		int edge_tmp=0;
+	public static String randomWalk(Graph graphG) {
+		int n = graphG.getNumberV();
+		int edgeTmp=0;
 		boolean[][] edgeVisited = new boolean[n][n];
 		
 		Random random = new Random();
 		int firstWord = random.nextInt(n);
-		G_List lists[] = G.get_lists();
-		String walkPath = G.get_word(firstWord) + " ";
+		G_List lists[] = graphG.getLists();
+		String walkPath = graphG.getWord(firstWord) + " ";
 		G_List tmp=lists[firstWord];
-		int edge_bound = G.getEdgeNum(firstWord);
-		if(edge_bound==0) return G.get_word(firstWord);
+		int edge_bound = graphG.getEdgeNum(firstWord);
+		if(edge_bound==0) return graphG.getWord(firstWord);
 		int edge = random.nextInt(edge_bound);
 		//System.out.println(edge);
 		for(int i=0;i<=edge;i++) {
 			tmp=tmp.next;
 		}
-		int nextWord = tmp.word_place;
+		int nextWord = tmp.wordPlace;
 		//System.out.println("nextword:"+nextWord);
 		while(!edgeVisited[firstWord][nextWord]) {
 			edgeVisited[firstWord][nextWord]=true;
-			walkPath = walkPath + G.get_word(nextWord)+" ";
+			walkPath = walkPath + graphG.getWord(nextWord)+" ";
 			System.out.println(firstWord + "-" + nextWord);
 			firstWord=nextWord;
 			tmp=lists[firstWord];
-			edge_tmp=G.getEdgeNum(firstWord);
-			if(edge_tmp==0) break;
-			edge = random.nextInt(edge_tmp);
+			edgeTmp=graphG.getEdgeNum(firstWord);
+			if(edgeTmp==0) break;
+			edge = random.nextInt(edgeTmp);
 			for(int i=0;i<=edge;i++) {
 				tmp=tmp.next;
 			}
-			nextWord = tmp.word_place;
+			nextWord = tmp.wordPlace;
 		}
-		if(edge_tmp!=0) walkPath+=G.get_word(tmp.word_place);
+		if(edgeTmp!=0) walkPath+=graphG.getWord(tmp.wordPlace);
 		//to explore strange new worlds seek out life and civilizations this 
 		return walkPath;
 	}
 	
-	static String calcShortestPath(Graph G, String word1, String word2) {
-		if(G.get_word_place(word1)==-1||G.get_word_place(word2)==-1)
+	static String calcShortestPath(Graph graphG, String word1, String word2) {
+		if(graphG.getWordPlace(word1)==-1||graphG.getWordPlace(word2)==-1)
 			return "word1 or word2 not in graph";
 		if(word1.equals(word2))
 			return word1+"->"+word2;
 		String minPath="";
-		int MaxNum=G.get_v_number();
-		boolean known[]= new boolean[MaxNum];
-		int length[]=new int[MaxNum];
-		int words_place[]= new int[MaxNum];
-		int word_place=G.get_word_place(word1);
-		known[word_place]=true;
+		int maxNum=graphG.getNumberV();
+		boolean known[]= new boolean[maxNum];
+		int length[]=new int[maxNum];
+		int wordsplace[]= new int[maxNum];
+		int wordPlace=graphG.getWordPlace(word1);
+		known[wordPlace]=true;
 		int vect_num=1;
-//		System.out.println(MaxNum);
-		for(int i=0;i<MaxNum;i++) {
+//		System.out.println(maxNum);
+		for(int i=0;i<maxNum;i++) {
 			length[i]=9999;
 		}
-		length[word_place]=0;
-		while(vect_num<MaxNum) {
-			G_List tmp1=G.get_lists()[word_place];
+		length[wordPlace]=0;
+		while(vect_num<maxNum) {
+			G_List tmp1=graphG.getLists()[wordPlace];
 			G_List tmp2=tmp1.next;
 //			System.out.println(vect_num);
 			while(tmp2!=null) {
-				if(length[tmp2.word_place]>length[tmp1.word_place]+tmp2.cost) {
-					length[tmp2.word_place]=length[tmp1.word_place]+tmp2.cost;
-					words_place[tmp2.word_place]=tmp1.word_place;
+				if(length[tmp2.wordPlace]>length[tmp1.wordPlace]+tmp2.cost) {
+					length[tmp2.wordPlace]=length[tmp1.wordPlace]+tmp2.cost;
+					wordsplace[tmp2.wordPlace]=tmp1.wordPlace;
 				}
 				tmp2=tmp2.next;
 			}
-			word_place = findMin(length,known,MaxNum);
-			if(word_place==-1)break;
-			known[word_place]=true;
+			wordPlace = findMin(length,known,maxNum);
+			if(wordPlace==-1)break;
+			known[wordPlace]=true;
 			vect_num++;
 		}
-		for(int i=0;i<MaxNum;i++) {
-		System.out.println(i+":"+known[i]+" "+length[i]+" "+G.get_word(words_place[i]));
+		for(int i=0;i<maxNum;i++) {
+		System.out.println(i+":"+known[i]+" "+length[i]+" "+graphG.getWord(wordsplace[i]));
 		}
-		int word2_place=G.get_word_place(word2);
-//		System.out.println(word2_place);
-		if(length[word2_place]==9999) {
+		int placeOfWord2=graphG.getWordPlace(word2);
+//		System.out.println(placeOfWord2);
+		if(length[placeOfWord2]==9999) {
 			minPath="两单词不可达";
 			return minPath;
 		}
 		else {
-			int tmp=words_place[word2_place];
+			int tmp=wordsplace[placeOfWord2];
 			minPath="->"+word2;
 			while(length[tmp]!=0) {
-				minPath="->"+G.get_word(tmp)+minPath;
-				tmp=words_place[tmp];
+				minPath="->"+graphG.getWord(tmp)+minPath;
+				tmp=wordsplace[tmp];
 			}
 			minPath=word1+minPath;
 		}
 		Map<String,String>map=new HashMap<String,String>();
-		int tmp=word2_place;
+		int tmp=placeOfWord2;
 		while(length[tmp]!=0) {
-			System.out.println(G.get_word(tmp));
-			map.put(G.get_word(words_place[tmp]),G.get_word(tmp));
-			tmp=words_place[tmp];
+			System.out.println(graphG.getWord(tmp));
+			map.put(graphG.getWord(wordsplace[tmp]),graphG.getWord(tmp));
+			tmp=wordsplace[tmp];
 		}
-		showDirectedGraph(G,map);
+		showDirectedGraph(graphG,map);
 		return minPath;
 		//to explore strange new worlds seek out life and civilizations this hello 
 	}
-	static int findMin(int[]length,boolean[]known,int MaxNum) {
+	static int findMin(int[]length,boolean[]known,int maxNum) {
 		int min_place=-1;
 		int min=999;
-		for(int i=0;i<MaxNum;i++) {
+		for(int i=0;i<maxNum;i++) {
 			if(known[i]==false&&length[i]<min) {
 				min_place=i;
 				min=length[i];
@@ -273,12 +278,12 @@ public class Project1_1 {
 
 // 图节点
 class G_List {
-	public int word_place;
+	public int wordPlace;
 	public G_List next;
 	public int cost;
 
 	public G_List(int w, int c) {
-		word_place = w;
+		wordPlace = w;
 		cost = c;
 		next = null;
 	}
@@ -290,14 +295,14 @@ class G_List {
 // 图
 class Graph {
 	private String vector[] = {};
-	private int v_number, n_number;
+	private int numberOfV , numberOfN;
 	private G_List lists[] = {};
-	// 存储word-》word_place
+	// 存储word-》wordPlace
 	private Map<String, Integer> letters = new HashMap<String, Integer>();
 
 	public Graph(String words[]) {
 		int pre = -1;
-		n_number = words.length;
+		numberOfN = words.length;
 		for (String word : words) {
 			if (!letters.containsKey(word)) {
 				G_List tmp = new G_List();
@@ -310,7 +315,7 @@ class Graph {
 				if (pre >= 0) {
 					tmp.cost = 1;
 					tmp.next = null;
-					tmp.word_place = vector.length - 1;
+					tmp.wordPlace = vector.length - 1;
 					if (lists[pre] == null)
 						lists[pre] = tmp;
 					else {
@@ -318,13 +323,13 @@ class Graph {
 						lists[pre].next = tmp;
 					}
 				}
-				pre = tmp.word_place;
+				pre = tmp.wordPlace;
 			} else {
 				G_List tmp = lists[pre];
 				int wtmp = letters.get(word);
 				boolean flag = false;
 				while (tmp != null) {
-					if (tmp.word_place == wtmp) {
+					if (tmp.wordPlace == wtmp) {
 						tmp.cost++;
 						flag = true;
 						break;
@@ -339,39 +344,36 @@ class Graph {
 				pre = wtmp;
 			}
 		}
-		v_number = vector.length;
+		numberOfV = vector.length;
 	}
 
-	public String cons_debug() {
-		for (String v : vector) {
-			System.out.print(v + " ");
-		}
-		System.out.println();
+	public String debugCons() {
+		
 		for (G_List list : lists) {
 			G_List temp = list;
 			while (temp != null) {
-				System.out.print(temp.word_place + " " + temp.cost + "/");
+				
 				temp = temp.next;
 			}
-			System.out.println();
+		
 		}
 		return "";
 	}
 
 	public String[] getBridgeWords(String word1, String word2) {
 		String[] bridgeWords = {};
-		int word1_place = letters.containsKey(word1) ? letters.get(word1) : -1;
-		int word2_place = letters.containsKey(word2) ? letters.get(word2) : -1;
-		if (word1_place < 0 || word2_place < 0) {
+		int placeOfWord1 = letters.containsKey(word1) ? letters.get(word1) : -1;
+		int placeOfWord2 = letters.containsKey(word2) ? letters.get(word2) : -1;
+		if (placeOfWord1 < 0 || placeOfWord2 < 0) {
 			return null;
 		}
-		G_List tmp1 = lists[word1_place].next;
+		G_List tmp1 = lists[placeOfWord1].next;
 		while (tmp1 != null) {
-			G_List tmp2 = lists[tmp1.word_place].next;
+			G_List tmp2 = lists[tmp1.wordPlace].next;
 			while (tmp2 != null) {
-				if (tmp2.word_place == word2_place) {
+				if (tmp2.wordPlace == placeOfWord2) {
 					bridgeWords = Arrays.copyOf(bridgeWords, bridgeWords.length + 1);
-					bridgeWords[bridgeWords.length - 1] = vector[tmp1.word_place];
+					bridgeWords[bridgeWords.length - 1] = vector[tmp1.wordPlace];
 					break;
 				}
 				tmp2 = tmp2.next;
@@ -381,30 +383,30 @@ class Graph {
 		return bridgeWords;
 	}
 
-	public String[] get_vector() {
+	public String[] getVector() {
 		return vector;
 	}
 
-	public int get_v_number() {
-		return v_number;
+	public int getNumberV() {
+		return numberOfV;
 	}
 
-	public int get_n_number() {
-		return n_number;
+	public int getNumberN() {
+		return numberOfN;
 	}
 
-	public G_List[] get_lists() {
+	public G_List[] getLists() {
 		return lists;
 	}
 
-	public int get_word_place(String word) {
+	public int getWordPlace(String word) {
 		if (letters.containsKey(word))
 			return letters.get(word);
 		else
 			return -1;
 	}
 
-	public String get_word(int place) {
+	public String getWord(int place) {
 		return vector[place];
 	}
 	

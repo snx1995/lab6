@@ -1,4 +1,4 @@
-package seProject1_1;
+package seproject1;
 
 
 import java.io.File;
@@ -70,11 +70,11 @@ class GraphViz {
 		graph.append('\n');
 	}
 
-	public void start_graph() {
-		graph.append("digraph G {\n");
+	public void startofGraph() {
+		graph.append("digraph graphG {\n");
 	}
 
-	public void end_graph() {
+	public void endofGraph() {
 		graph.append("}");
 	}
 }

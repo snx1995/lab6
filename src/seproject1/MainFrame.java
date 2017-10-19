@@ -1,4 +1,4 @@
-package seProject1_1;
+package seproject1;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,137 +14,137 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.time.chrono.JapaneseChronology;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageInputStream;
+
+
+
+
+
 import javax.swing.*;
 import javax.swing.border.Border;
 
 public class MainFrame {
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(() -> {
-			JFrame jf = new JFrame("生成有向图");
-			jf.setLocation(300, 150);
-			jf.setLayout(new GridBagLayout());
+  public static void main(String[] args) {
+	  EventQueue.invokeLater(() -> {
+		JFrame jf = new JFrame("生成有向图");
+		jf.setLocation(300, 150);
+		jf.setLayout(new GridBagLayout());
+	
+		final GridBagConstraints gbc = new GridBagConstraints();
+		jf.getContentPane().setBackground(Color.white);
+		jf.setSize(400, 150);
+		jf.setResizable(false);
+		jf.setDefaultCloseOperation(3);
+	
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.weightx = 0;
+		gbc.weighty = 0;
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		gbc.ipadx = 1;
+		gbc.ipady = 1;
+		JTextArea jArea = new JTextArea();
+		jArea.setText("Please input file path:");
+		jArea.setEditable(false);
+		Font font = new Font("Microsoft Ya Hei", 1, 16);
+		jArea.setFont(font);
+		jf.add(jArea, gbc);
+	
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.gridwidth = 4;
+		gbc.gridheight = 1;
+		gbc.weightx = 4;
+		gbc.weighty = 2;
+		gbc.anchor = GridBagConstraints.NORTH;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		gbc.ipadx = 1;
+		gbc.ipady = 1;
+		JTextField jtf = new JTextField();
+		Font jtfFont = new Font("Microsoft Ya Hei", 0, 16);
+		jtf.setFont(jtfFont);
+		jf.add(jtf, gbc);
+	
+		gbc.gridx = 3;
+		gbc.gridy = 2;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+		gbc.anchor = GridBagConstraints.NORTH;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 0, 5, 5);
+		gbc.ipadx = 1;
+		gbc.ipady = 1;
+		JButton jButton = new JButton("Confirm");
+		jf.add(jButton, gbc);
+	
+		gbc.gridx = 2;
+		gbc.gridy = 2;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+		gbc.anchor = GridBagConstraints.NORTH;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 0, 5, 5);
+		gbc.ipadx = 1;
+		gbc.ipady = 1;
+		JButton jButton2 = new JButton("Browse");
+		jf.add(jButton2, gbc);
+	
+		jf.setVisible(true);
+	
+		JFrame jf2 = new JFrame("ShowImage");
+		jf2.setDefaultCloseOperation(3);
 
-			GridBagConstraints gbc = new GridBagConstraints();
-			jf.getContentPane().setBackground(Color.white);
-			jf.setSize(400, 150);
-			jf.setResizable(false);
-			jf.setDefaultCloseOperation(3);
+		jButton.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
 
-			gbc.gridx = 0;
-			gbc.gridy = 0;
-			gbc.gridwidth = 1;
-			gbc.gridheight = 1;
-			gbc.weightx = 0;
-			gbc.weighty = 0;
-			gbc.anchor = GridBagConstraints.CENTER;
-			gbc.fill = GridBagConstraints.HORIZONTAL;
-			gbc.insets = new Insets(5, 5, 5, 5);
-			gbc.ipadx = 1;
-			gbc.ipady = 1;
-			JTextArea jArea = new JTextArea();
-			jArea.setText("Please input file path:");
-			jArea.setEditable(false);
-			Font font = new Font("Microsoft Ya Hei", 1, 16);
-			jArea.setFont(font);
-			jf.add(jArea, gbc);
+			//System.out.println(jtf.getText());
+			String filePath = jtf.getText();
 
-			gbc.gridx = 0;
-			gbc.gridy = 1;
-			gbc.gridwidth = 4;
-			gbc.gridheight = 1;
-			gbc.weightx = 4;
-			gbc.weighty = 2;
-			gbc.anchor = GridBagConstraints.NORTH;
-			gbc.fill = GridBagConstraints.HORIZONTAL;
-			gbc.insets = new Insets(5, 5, 5, 5);
-			gbc.ipadx = 1;
-			gbc.ipady = 1;
-			JTextField jtf = new JTextField();
-			Font jtfFont = new Font("Microsoft Ya Hei", 0, 16);
-			jtf.setFont(jtfFont);
-			jf.add(jtf, gbc);
+			// if(filePath.matches(""))
+			Graph graph = Project1.createDirectedGraph(filePath);
+			Project1.showDirectedGraph(graph);
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO 自动生成的 catch 块
+			
+			}
+			
+			new MainFrame(graph);
+			jf.dispose();
+		}
+	});
 
-			gbc.gridx = 3;
-			gbc.gridy = 2;
-			gbc.gridwidth = 1;
-			gbc.gridheight = 1;
-			gbc.weightx = 1;
-			gbc.weighty = 1;
-			gbc.anchor = GridBagConstraints.NORTH;
-			gbc.fill = GridBagConstraints.HORIZONTAL;
-			gbc.insets = new Insets(5, 0, 5, 5);
-			gbc.ipadx = 1;
-			gbc.ipady = 1;
-			JButton jButton = new JButton("Confirm");
-			jf.add(jButton, gbc);
-
-			gbc.gridx = 2;
-			gbc.gridy = 2;
-			gbc.gridwidth = 1;
-			gbc.gridheight = 1;
-			gbc.weightx = 1;
-			gbc.weighty = 1;
-			gbc.anchor = GridBagConstraints.NORTH;
-			gbc.fill = GridBagConstraints.HORIZONTAL;
-			gbc.insets = new Insets(5, 0, 5, 5);
-			gbc.ipadx = 1;
-			gbc.ipady = 1;
-			JButton jButton2 = new JButton("Browse");
-			jf.add(jButton2, gbc);
-
-			jf.setVisible(true);
-
-			JFrame jf2 = new JFrame("ShowImage");
-			jf2.setDefaultCloseOperation(3);
-
-			jButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-
-					//System.out.println(jtf.getText());
-					String filePath = jtf.getText();
-
-					// if(filePath.matches(""))
-					Graph graph = Project1_1.createDirectedGraph(filePath);
-					Project1_1.showDirectedGraph(graph);
-					
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e1) {
-						// TODO 自动生成的 catch 块
-						e1.printStackTrace();
-					}
-					
-					new MainFrame(graph);
-					jf.dispose();
+	JFileChooser jFileChooser = new JFileChooser();
+	File dir = new File("C:\\Users\\Snxt\\Desktop");
+	jFileChooser.setCurrentDirectory(dir);
+	jButton2.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int res = jFileChooser.showOpenDialog(null);
+			if (res == jFileChooser.APPROVE_OPTION) {
+				jtf.setText(jFileChooser.getSelectedFile().toString());
+			} else {
+				System.out.println("No file selected!");
 				}
-			});
-
-			JFileChooser jFileChooser = new JFileChooser();
-			File dir = new File("C:\\Users\\Snxt\\Desktop");
-			jFileChooser.setCurrentDirectory(dir);
-			jButton2.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					int result = jFileChooser.showOpenDialog(null);
-					if (result == jFileChooser.APPROVE_OPTION) {
-						jtf.setText(jFileChooser.getSelectedFile().toString());
-					} else {
-						System.out.println("No file selected!");
-					}
-				}
-			});
+			}
 		});
-	}
+	});
+}
 
-	public MainFrame(Graph G) {
+	public MainFrame(Graph graphG) {
 		EventQueue.invokeLater(() -> {
 			JFrame frame = new JFrame();
 			frame.setTitle("实验1");
@@ -155,22 +155,22 @@ public class MainFrame {
 			frame.setIconImage(image);
 
 			frame.setLayout(new BorderLayout());
-			ShowImageComponent sic = new ShowImageComponent(G);
+			ShowImageComponent sic = new ShowImageComponent(graphG);
 			Border imgBorder = BorderFactory.createEtchedBorder();
 			Border imgTitledBorder = BorderFactory.createTitledBorder(imgBorder, "Directed Graph");
 			sic.setBorder(imgTitledBorder);
 
-			JScrollPane jScrollPane = new JScrollPane(sic);
+			final JScrollPane jScrollPane = new JScrollPane(sic);
 			Border btnTitled = BorderFactory.createTitledBorder(imgBorder, "Options");
 			Border resultTitled = BorderFactory.createTitledBorder(imgBorder, "Result");
 
-			ResultPanel result = new ResultPanel();
-			result.setBorder(resultTitled);
+			ResultPanel res = new ResultPanel();
+			res.setBorder(resultTitled);
 
-			ButtonPanel buttonsPart = new ButtonPanel(result, sic, G);
+			ButtonPanel buttonsPart = new ButtonPanel(res, sic, graphG);
 			buttonsPart.setBorder(btnTitled);
 
-			frame.add(result, BorderLayout.SOUTH);
+			frame.add(res, BorderLayout.SOUTH);
 			frame.add(sic, BorderLayout.CENTER);
 			frame.add(buttonsPart, BorderLayout.EAST);
 			frame.setVisible(true);
@@ -186,7 +186,7 @@ class ButtonPanel extends JPanel {
 	private JButton bt3;
 	private JButton bt4;
 	private JButton bt5;
-	private ResultPanel result;
+	private ResultPanel res;
 	private ShowImageComponent showImg;
 	private boolean pause;
 
@@ -196,42 +196,43 @@ class ButtonPanel extends JPanel {
 
 	private String[] randomPath;
 	
-	public ButtonPanel(ResultPanel r, ShowImageComponent s, Graph G) {
+	public ButtonPanel(ResultPanel r, ShowImageComponent s, Graph graphG) {
 		bt5 = new JButton("停止游走");
 		bt4 = new JButton("随机游走");
 		bt3 = new JButton("最短路径");
 		bt2 = new JButton("生成新文本");
 		bt1 = new JButton("桥接词");
 		bt5.setVisible(false);
-		result = r;
+		res = r;
 		showImg = s;
 		message = new StringMessage();
 		setLayout(new GridLayout(18, 1));
 
-		bt1.addActionListener(event -> bridgeWordsFrame(G));
-		bt2.addActionListener(event -> newTextFrame(G));
-		bt3.addActionListener(event -> shortestWayFrame(G));
+		bt1.addActionListener(event -> bridgeWordsFrame(graphG));
+		bt2.addActionListener(event -> newTextFrame(graphG));
+		bt3.addActionListener(event -> shortestWayFrame(graphG));
 		bt4.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				flag++;
 				if(flag==0) {
-					randomPath = Project1_1.randomWalk(G).split("[^a-z]+");
-					result.setResult(randomPath[0]);
+					randomPath = Project1.randomWalk(graphG).split("[^a-z]+");
+					res.setResult(randomPath[0]);
 				}
 				else {
 					String path = randomPath[0];
 					for(int i=1;i<=flag;i++) {
 						path += " " +randomPath[i];
 					}
-					result.setResult(path);
+					res.setResult(path);
 				}
 				if(flag>=randomPath.length-1) {
 					bt4.setText("随机游走");
 					flag=-1;
+				} else {
+					bt4.setText("继续游走");
 				}
-				else bt4.setText("继续游走");
 			}
 		});
 		add(bt5, 8, 0);
@@ -242,7 +243,7 @@ class ButtonPanel extends JPanel {
 
 	}
 
-	public void bridgeWordsFrame(Graph G) {
+	public void bridgeWordsFrame(Graph graphG) {
 		EventQueue.invokeLater(() -> {
 			JFrame jFrame = new JFrame("请输入两个单词");
 			jFrame.setLayout(new GridLayout(3, 2));
@@ -272,7 +273,7 @@ class ButtonPanel extends JPanel {
 			bridgeCancel.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					result.setResult("Operation canceled!");
+					res.setResult("Operation canceled!");
 					jFrame.dispose();
 				}
 			});
@@ -281,7 +282,7 @@ class ButtonPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					message.msg1 = textField1.getText();
 					message.msg2 = textField2.getText();
-					result.setResult(Project1_1.queryBridgeWords(G, message.msg1, message.msg2));
+					res.setResult(Project1.queryBridgeWords(graphG, message.msg1, message.msg2));
 					jFrame.dispose();
 				}
 			});
@@ -289,7 +290,7 @@ class ButtonPanel extends JPanel {
 		});
 	}
 
-	public void newTextFrame(Graph G) {
+	public void newTextFrame(Graph graphG) {
 		EventQueue.invokeLater(() -> {
 			Font font = new Font("Microsoft YaHei", 1, 14);
 			JFrame newTextFrame = new JFrame("生成新文本");
@@ -329,7 +330,7 @@ class ButtonPanel extends JPanel {
 			newTextCancel.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					result.setResult("Operation canceled!");
+					res.setResult("Operation canceled!");
 					newTextFrame.dispose();
 				}
 			});
@@ -337,7 +338,7 @@ class ButtonPanel extends JPanel {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					message.msg1 = originalText.getText();
-					result.setResult("New text : " + "\n" + Project1_1.generateNewText(G, message.msg1));
+					res.setResult("New text : " + "\n" + Project1.generateNewText(graphG, message.msg1));
 					newTextFrame.dispose();
 				}
 			});
@@ -350,7 +351,7 @@ class ButtonPanel extends JPanel {
 		});
 	}
 
-	public void shortestWayFrame(Graph G) {
+	public void shortestWayFrame(Graph graphG) {
 		EventQueue.invokeLater(() -> {
 			JFrame jFrame = new JFrame("计算最短路径");
 			jFrame.setSize(300, 150);
@@ -368,7 +369,7 @@ class ButtonPanel extends JPanel {
 			shortestWayCancel.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					result.setResult("Operation canceled!");
+					res.setResult("Operation canceled!");
 					jFrame.dispose();
 				}
 			});
@@ -377,8 +378,8 @@ class ButtonPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					message.msg2 = t1.getText().toLowerCase();
 					message.msg1 = t2.getText().toLowerCase();
-					String r = Project1_1.calcShortestPath(G, message.msg1, message.msg2);
-					result.setResult(r);
+					String r = Project1.calcShortestPath(graphG, message.msg1, message.msg2);
+					res.setResult(r);
 					if(!r.equals("word1 or word2 not in graph")) showImg.setImgFilePath("dotGif.gif");
 					//showImg.repaint();
 					jFrame.dispose();
@@ -402,8 +403,8 @@ class ButtonPanel extends JPanel {
 }
 
 class ResultPanel extends JPanel {
-	private JTextArea resultText;
-	private String result;
+	private final JTextArea resultText;
+	private String res;
 	private JLabel label;
 
 	public ResultPanel() {
@@ -417,9 +418,9 @@ class ResultPanel extends JPanel {
 		add(resultText);
 	}
 
-	public void setResult(String result) {
-		resultText.setText(result);
-		this.result = result;
+	public void setResult(String res) {
+		resultText.setText(res);
+		this.res = res;
 	}
 	
 }
@@ -436,12 +437,12 @@ class ShowImageComponent extends JComponent {
 
 	private JLabel picLabel;
 
-	public ShowImageComponent(Graph G) {
-		//Project1_1.showDirectedGraph(G);
+	public ShowImageComponent(Graph graphG) {
+		//Project1.showDirectedGraph(graphG);
 		image = getToolkit().getImage("dotGif.gif");
 		imageFilePath = "dotGif.gif";
 		Icon pic = new ImageIcon("dotGif.gif");
-		File imgfile = new File("dotGif.gif");
+
 		setLayout(new BorderLayout());
 		picLabel = new JLabel("");
 		picLabel.setIcon(pic);
@@ -459,20 +460,20 @@ class ShowImageComponent extends JComponent {
 		repaint();
 	}
 	
-	public void paintComponent(Graphics G) {
-		super.paintComponents(G);
+	public void paintComponent(Graphics graphG) {
+		super.paintComponents(graphG);
 		System.out.println("Show Image");
 		// Image img = getToolkit().getImage(imageFilePath);
 		// Image img = new ImageIcon(imageFilePath).getImage();
 		// Image img2 = getToolkit().getImage(imageFilePath);
-		// G.drawImage(img2, (DEFAULT_WIDTH - img2.getWidth(this)) / 2, (DEFAULT_HEIGHT
+		// graphG.drawImage(img2, (DEFAULT_WIDTH - img2.getWidth(this)) / 2, (DEFAULT_HEIGHT
 		// - img2.getHeight(this)) / 2, this);
-		// G.dispose();
+		// graphG.dispose();
 		// img2 = getToolkit().getImage(imageFilePath);
-		// G.drawImage(image, (DEFAULT_WIDTH - image.getWidth(this)) / 2,
+		// graphG.drawImage(image, (DEFAULT_WIDTH - image.getWidth(this)) / 2,
 		// (DEFAULT_HEIGHT - image.getHeight(this)) / 2, DEFAULT_WIDTH ,DEFAULT_HEIGHT,
 		// null);
-		G.drawImage(image, 30, 30, DEFAULT_WIDTH - 10, DEFAULT_HEIGHT - 10, null);
+		graphG.drawImage(image, 30, 30, DEFAULT_WIDTH - 10, DEFAULT_HEIGHT - 10, null);
 	}
 
 	public void setImgFilePath(String filepath) {
@@ -482,9 +483,9 @@ class ShowImageComponent extends JComponent {
 		repaint();
 	}
 	
-	public void paint(Graphics G) {
+	public void paint(Graphics graphG) {
 		image = new ImageIcon(imageFilePath).getImage();
-		G.drawImage(image, 30, 30, DEFAULT_WIDTH - 10, DEFAULT_HEIGHT - 10, null);
+		graphG.drawImage(image, 30, 30, DEFAULT_WIDTH - 10, DEFAULT_HEIGHT - 10, null);
 	}
 	
 	public Dimension getPreferredSize() {
