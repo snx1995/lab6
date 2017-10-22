@@ -36,7 +36,7 @@ public class Project1 {
 		 
 	}
 
-	// ºÏ²¢×Ö·ûÊı×éa,b
+	// åˆå¹¶å­—ç¬¦æ•°ç»„a,b
 	static String[] concat(String[] a, String[] b) {
 		String[] c = new String[a.length + b.length];
 		System.arraycopy(a, 0, c, 0, a.length);
@@ -44,9 +44,9 @@ public class Project1 {
 		return c;
 	}
 
-	// ´´½¨ÁÚ½Ó±í
+	// åˆ›å»ºé‚»æ¥è¡¨
 	public static Graph createDirectedGraph(String filename) {
-		// wordtmp±£´æ²¢·Ö¸îÒ»ĞĞ£¬words±£´æÈ«²¿µ¥´Ê
+		// wordtmpä¿å­˜å¹¶åˆ†å‰²ä¸€è¡Œï¼Œwordsä¿å­˜å…¨éƒ¨å•è¯
 		String[] wordtmp = null, words = {};
 		try {
 			FileReader fr = new FileReader(filename);
@@ -54,7 +54,7 @@ public class Project1 {
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				// line=line.toLowerCase();
-				// ·Ö¸î·½Ê½£ºÒÔÒ»¸ö»ò¶à¸öÈ«²¿·ÇĞ¡Ğ´×ÖÄ¸×Ö·ûÎª·Ö¸îµã
+				// åˆ†å‰²æ–¹å¼ï¼šä»¥ä¸€ä¸ªæˆ–å¤šä¸ªå…¨éƒ¨éå°å†™å­—æ¯å­—ç¬¦ä¸ºåˆ†å‰²ç‚¹
 				wordtmp = line.split("[^a-zA-Z]+");
 				for (int i = 0; i < wordtmp.length; i++) {
 					wordtmp[i] = wordtmp[i].toLowerCase();
@@ -71,7 +71,7 @@ public class Project1 {
 		return graph;
 	}
 
-	// Êä³öGÖĞword1ºÍword2µÄÇÅ½Ó´Ê
+	// è¾“å‡ºGä¸­word1å’Œword2çš„æ¡¥æ¥è¯
 	static String queryBridgeWords(Graph graphG, String word1, String word2) {
 		String[] bridge = graphG.getBridgeWords(word1, word2);
 		if (bridge == null)
@@ -137,7 +137,7 @@ public class Project1 {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO ×Ô¶¯Éú³ÉµÄ catch ¿é
+			// TODO è‡ªåŠ¨ç”Ÿæˆçš„ catch å—
 			e.printStackTrace();
 		}
 	}
@@ -209,7 +209,7 @@ public class Project1 {
 		int maxNum=graphG.getNumberV();
 		boolean known[]= new boolean[maxNum];
 		int length[]=new int[maxNum];
-		int wordsplace[]= new int[maxNum];
+		int wordsPlace[]= new int[maxNum];
 		int wordPlace=graphG.getWordPlace(word1);
 		known[wordPlace]=true;
 		int vect_num=1;
@@ -225,7 +225,7 @@ public class Project1 {
 			while(tmp2!=null) {
 				if(length[tmp2.wordPlace]>length[tmp1.wordPlace]+tmp2.cost) {
 					length[tmp2.wordPlace]=length[tmp1.wordPlace]+tmp2.cost;
-					wordsplace[tmp2.wordPlace]=tmp1.wordPlace;
+					wordsPlace[tmp2.wordPlace]=tmp1.wordPlace;
 				}
 				tmp2=tmp2.next;
 			}
@@ -235,20 +235,20 @@ public class Project1 {
 			vect_num++;
 		}
 		for(int i=0;i<maxNum;i++) {
-		System.out.println(i+":"+known[i]+" "+length[i]+" "+graphG.getWord(wordsplace[i]));
+		System.out.println(i+":"+known[i]+" "+length[i]+" "+graphG.getWord(wordsPlace[i]));
 		}
 		int placeOfWord2=graphG.getWordPlace(word2);
 //		System.out.println(placeOfWord2);
 		if(length[placeOfWord2]==9999) {
-			minPath="Á½µ¥´Ê²»¿É´ï";
+			minPath="ä¸¤å•è¯ä¸å¯è¾¾";
 			return minPath;
 		}
 		else {
-			int tmp=wordsplace[placeOfWord2];
+			int tmp=wordsPlace[placeOfWord2];
 			minPath="->"+word2;
 			while(length[tmp]!=0) {
 				minPath="->"+graphG.getWord(tmp)+minPath;
-				tmp=wordsplace[tmp];
+				tmp=wordsPlace[tmp];
 			}
 			minPath=word1+minPath;
 		}
@@ -256,8 +256,8 @@ public class Project1 {
 		int tmp=placeOfWord2;
 		while(length[tmp]!=0) {
 			System.out.println(graphG.getWord(tmp));
-			map.put(graphG.getWord(wordsplace[tmp]),graphG.getWord(tmp));
-			tmp=wordsplace[tmp];
+			map.put(graphG.getWord(wordsPlace[tmp]),graphG.getWord(tmp));
+			tmp=wordsPlace[tmp];
 		}
 		showDirectedGraph(graphG,map);
 		return minPath;
@@ -276,7 +276,7 @@ public class Project1 {
 	}
 }
 
-// Í¼½Úµã
+// å›¾èŠ‚ç‚¹
 class G_List {
 	public int wordPlace;
 	public G_List next;
@@ -292,12 +292,12 @@ class G_List {
 	}
 }
 
-// Í¼
+// å›¾
 class Graph {
 	private String vector[] = {};
 	private int numberOfV , numberOfN;
 	private G_List lists[] = {};
-	// ´æ´¢word-¡·wordPlace
+	// å­˜å‚¨word-ã€‹wordPlace
 	private Map<String, Integer> letters = new HashMap<String, Integer>();
 
 	public Graph(String words[]) {
