@@ -1,0 +1,7 @@
+digraph G {
+	hello->world[label="1"];
+	world->to[label="1"];
+	to->you[label="1"];
+	you->and[label="1"];
+	and->a[label="1"];
+}
