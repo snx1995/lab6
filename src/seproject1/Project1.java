@@ -36,7 +36,7 @@ public class Project1 {
 		 
 	}
 
-	// 合并字符数组a,b
+	// 鍚堝苟瀛楃鏁扮粍a,b
 	static String[] concat(String[] a, String[] b) {
 		String[] c = new String[a.length + b.length];
 		System.arraycopy(a, 0, c, 0, a.length);
@@ -44,9 +44,9 @@ public class Project1 {
 		return c;
 	}
 
-	// 创建邻接表
+	// 鍒涘缓閭绘帴琛�
 	public static Graph createDirectedGraph(String filename) {
-		// wordtmp保存并分割一行，words保存全部单词
+		// wordtmp淇濆瓨骞跺垎鍓蹭竴琛岋紝words淇濆瓨鍏ㄩ儴鍗曡瘝
 		String[] wordtmp = null, words = {};
 		try {
 			FileReader fr = new FileReader(filename);
@@ -54,7 +54,7 @@ public class Project1 {
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				// line=line.toLowerCase();
-				// 分割方式：以一个或多个全部非小写字母字符为分割点
+				// 鍒嗗壊鏂瑰紡锛氫互涓�涓垨澶氫釜鍏ㄩ儴闈炲皬鍐欏瓧姣嶅瓧绗︿负鍒嗗壊鐐�
 				wordtmp = line.split("[^a-zA-Z]+");
 				for (int i = 0; i < wordtmp.length; i++) {
 					wordtmp[i] = wordtmp[i].toLowerCase();
@@ -71,15 +71,17 @@ public class Project1 {
 		return graph;
 	}
 
-	// 输出G中word1和word2的桥接词
+	// 杈撳嚭G涓瓀ord1鍜寃ord2鐨勬ˉ鎺ヨ瘝
 	static String queryBridgeWords(Graph graphG, String word1, String word2) {
+		word1 = word1.toLowerCase();
+		word2 = word2.toLowerCase();
 		String[] bridge = graphG.getBridgeWords(word1, word2);
 		if (bridge == null)
 			return "No " + word1 + " or " + word2 + " in the graph!";
 		if (bridge.length == 0)
 			return "No bridge words from " + word1 + " to " + word2 + "!";
 		if (bridge.length == 1)
-			return "The bridge words from " + word1 + " to " + word2 + " is: " + bridge[0];
+			return "The bridge word from " + word1 + " to " + word2 + " is: " + bridge[0];
 		String result = "The bridge words from " + word1 + " to " + word2 + " are: ";
 		for (int i = 0; i < bridge.length - 1; i++) {
 			result = result + bridge[i] + ", ";
@@ -89,8 +91,8 @@ public class Project1 {
 	}
 
 	static void showDirectedGraph(Graph graphG) {
-		GraphViz gViz = new GraphViz("C:\\Users\\majunhua123\\Lab4\\Lab4",
-				"C:\\graphviz\\release\\bin\\dot.exe");
+		GraphViz gViz = new GraphViz("E:\\Projects\\javaNeon\\selab6\\SEProject-1",
+				"C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe");
 		gViz.startofGraph();
 		for (G_List list : graphG.getLists()) {
 			if (list.next != null) {
@@ -111,7 +113,7 @@ public class Project1 {
 	}
 
 	static void showDirectedGraph(Graph graphG,Map<String,String>map) {
-		GraphViz gViz = new GraphViz("E:\\Projects\\java\\SEProject_1\\shortestPath",
+		GraphViz gViz = new GraphViz("E:\\Projects\\javaNeon\\selab6\\shortestPath",
 				"C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe");
 		gViz.startofGraph();
 		for (G_List list : graphG.getLists()) {
@@ -137,7 +139,7 @@ public class Project1 {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO 自动生成的 catch 块
+			// TODO 鑷姩鐢熸垚鐨� catch 鍧�
 			e.printStackTrace();
 		}
 	}
@@ -240,7 +242,7 @@ public class Project1 {
 		int placeOfWord2=graphG.getWordPlace(word2);
 //		System.out.println(placeOfWord2);
 		if(length[placeOfWord2]==9999) {
-			minPath="两单词不可达";
+			minPath="涓ゅ崟璇嶄笉鍙揪";
 			return minPath;
 		}
 		else {
@@ -276,7 +278,7 @@ public class Project1 {
 	}
 }
 
-// 图节点
+// 鍥捐妭鐐�
 class G_List {
 	public int wordPlace;
 	public G_List next;
@@ -292,12 +294,12 @@ class G_List {
 	}
 }
 
-// 图
+// 鍥�
 class Graph {
 	private String vector[] = {};
 	private int numberOfV , numberOfN;
 	private G_List lists[] = {};
-	// 存储word-》wordPlace
+	// 瀛樺偍word-銆媤ordPlace
 	private Map<String, Integer> letters = new HashMap<String, Integer>();
 
 	public Graph(String words[]) {
